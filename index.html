@@ -2144,5 +2144,18 @@ initAmp();
 initMonthlyGrid();
 
 </script>
+<!-- iframe高さ通知（WEBベンダー提供：親へpostMessageで高さ送信） -->
+<script>
+(function() {
+  var wrap = document.querySelector('body > div.wrap');
+  if (!wrap) return;
+  function sendHeight() {
+    window.parent.postMessage({ type: 'simulatorHeight', height: wrap.offsetHeight }, '*');
+  }
+  var ro = new ResizeObserver(sendHeight);
+  ro.observe(wrap);
+  sendHeight();
+})();
+</script>
 </body>
 </html>
