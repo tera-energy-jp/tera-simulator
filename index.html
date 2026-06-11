@@ -1721,17 +1721,17 @@ function initAmp(){
       [10,15,20,30,40,50,60].forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=a+'A';gB.appendChild(o);});
       sel.appendChild(gB);
       const gC=document.createElement('optgroup'); gC.label='従量電灯C（大世帯・事務所）';
-      [70,80,100,110,120,150,200,300,500].forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=(a/10)+'kVA';gC.appendChild(o);});
+      for(let kva=7;kva<=50;kva++){const o=document.createElement('option');o.value=kva*10;o.textContent=kva+'kVA';gC.appendChild(o);}
       sel.appendChild(gC); sel.value=30;
     }else{
       const gA=document.createElement('optgroup'); gA.label='従量電灯A（6kVA未満・家庭）';
       const oA=document.createElement('option'); oA.value=0; oA.textContent='契約容量なし'; gA.appendChild(oA); sel.appendChild(gA);
       const gB=document.createElement('optgroup'); gB.label='従量電灯B（6kVA以上）';
-      [60,70,80,100,110,120,150,200,300,500].forEach(a=>{const o=document.createElement('option');o.value=a;o.textContent=(a/10)+'kVA';gB.appendChild(o);});
+      for(let kva=6;kva<=50;kva++){const o=document.createElement('option');o.value=kva*10;o.textContent=kva+'kVA';gB.appendChild(o);}
       sel.appendChild(gB); sel.value=0;
     }
   }else{
-    [3,5,7,10,15,20,30,50].forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k+'kW';sel.appendChild(o);});
+    [0.5].concat(Array.from({length:50},(_,i)=>i+1)).forEach(kw=>{const o=document.createElement('option');o.value=kw;o.textContent=kw+'kW';sel.appendChild(o);});
     sel.value=10;
   }
 }
@@ -2057,8 +2057,9 @@ function renderSrc(){
     +'<p style="margin-top:12px;line-height:1.85;font-size:.79rem">'
     +'・<b>エリア</b>：'+AREA_LABELS[area]+' ／ <b>計算方法</b>：直近12ヶ月の使用量パターンを2022〜2026年度に当てはめ、12ヶ月換算で年間総額を算出<br>'
     +'・<b>燃料費調整</b>：9エリア確定マスター（2022〜2026）<span class="tg ok">確定</span> ／ <b>再エネ賦課金</b>：2026=4.18円/kWh <span class="tg ok">確定</span><br>'
-    +'・<b>容量拠出金</b>：2024=2.3 / 2025=1.0 / 2026=1.5円/kWh <span class="tg ok">確定</span> ／ <b>TERA手数料</b>：5.1円/kWh <span class="tg ok">確定</span><br>'
+    +'・<b>容量拠出金</b>：2024=0.5 / 2025=0.7 / 2026=1.5円/kWh <span class="tg ok">確定</span> ／ <b>TERA手数料</b>：5.1円/kWh <span class="tg ok">確定</span><br>'
     +'・<b>JEPX調達原価</b>：JEPX公式CSV 2022-04〜2026-05 ロードカーブ加重平均 <span class="tg ok">確定</span><br>'
+    +'・<b>最新年度スポット算出根拠</b>：2026年度は<b>2026年4月〜5月</b>の市場実績（JEPX）にもとづく年度平均で試算（年度途中のため最新確定月まで毎月更新）<br>'
     +'・<b>託送料金</b>：9エリア改定履歴データ（2019-10〜2025-10）時期別適用 <span class="tg ok">確定</span><br>'
     +'・<b>規制</b>＝燃調上限あり ／ <b>自由</b>＝上限なし ／ <b>TERA</b>＝JEPX年度平均連動＋手数料<br>'
     +'・本シミュレーションは過去実績に基づく推計であり、将来の料金を保証するものではありません。'
