@@ -2145,7 +2145,7 @@ initAmp();
 initMonthlyGrid();
 
 </script>
-<!-- iframe高さ通知（WEBベンダー提供：親へpostMessageで高さ送信） -->
+<!-- iframe高さ通知（WEBベンダー提供：親へpostMessageで高さ送信／ResizeObserverガード付き） -->
 <script>
 (function() {
   var wrap = document.querySelector('body > div.wrap');
@@ -2153,8 +2153,13 @@ initMonthlyGrid();
   function sendHeight() {
     window.parent.postMessage({ type: 'simulatorHeight', height: wrap.offsetHeight }, '*');
   }
-  var ro = new ResizeObserver(sendHeight);
-  ro.observe(wrap);
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(wrap);
+  } else {
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    document.addEventListener('click', function(){ setTimeout(sendHeight, 400); });
+  }
   sendHeight();
 })();
 </script>
