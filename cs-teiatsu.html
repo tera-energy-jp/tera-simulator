@@ -1416,23 +1416,23 @@ const TSO_KWH_LP_POWER = { // 動力標準 接続送電サービス kWh単価
   hokkaido:4.46, tohoku:8.57, tokyo:4.54, chubu:6.07, hokuriku:4.69,
   kansai:4.69, chugoku:6.07, shikoku:5.97, kyushu:5.58
 };
-const TSO_BASE_LP = { // 動力標準（主開閉器契約） 円/kW/月
-  hokkaido:398.20, tohoku:457.60, tokyo:461.14, chubu:412.50, hokuriku:396.00,
-  kansai:378.40, chugoku:466.40, shikoku:454.30, kyushu:379.26
+const TSO_BASE_LP = { // 動力標準（実量契約） 円/kW/月（TERAは実量制）
+  hokkaido:664.40, tohoku:630.30, tokyo:731.97, chubu:550.00, hokuriku:539.00,
+  kansai:460.90, chugoku:568.70, shikoku:554.40, kyushu:571.44
 };
 // 電灯標準（SB・主開閉器契約）の託送基本料金（円/kVA/月）。最低料金制エリア（関西・中国・四国）は最初の6kVAまで定額、それ以降kVA従量
 const TSO_BASE_LIGHT = {
-  // アンペア制エリア（kVA比例）
-  hokkaido: { type:'per_kva', perKva:236.50 },
-  tohoku:   { type:'per_kva', perKva:166.10 },
-  tokyo:    { type:'per_kva', perKva:152.24 },
-  chubu:    { type:'per_kva', perKva:137.50 },
-  hokuriku: { type:'per_kva', perKva:192.50 },
-  kyushu:   { type:'per_kva', perKva:162.24 },
-  // 最低料金制エリア（最初の6kVAまで定額＋超過分従量）
-  kansai:   { type:'min_charge', firstBlock:240.90, firstBlockKva:6, perKvaOver:80.30 },
-  chugoku:  { type:'min_charge', firstBlock:268.40, firstBlockKva:6, perKvaOver:89.10 },
-  shikoku:  { type:'min_charge', firstBlock:297.00, firstBlockKva:6, perKvaOver:99.00 }
+  // アンペア制エリア（kVA比例・実量契約／TERAは実量制）
+  hokkaido: { type:'per_kva', perKva:295.90 },
+  tohoku:   { type:'per_kva', perKva:226.60 },
+  tokyo:    { type:'per_kva', perKva:230.67 },
+  chubu:    { type:'per_kva', perKva:214.50 },
+  hokuriku: { type:'per_kva', perKva:242.00 },
+  kyushu:   { type:'per_kva', perKva:227.38 },
+  // 最低料金制エリア（最初の6kVAまで定額＋超過分従量・実量契約）
+  kansai:   { type:'min_charge', firstBlock:290.40, firstBlockKva:6, perKvaOver:96.80 },
+  chugoku:  { type:'min_charge', firstBlock:326.70, firstBlockKva:6, perKvaOver:108.90 },
+  shikoku:  { type:'min_charge', firstBlock:363.00, firstBlockKva:6, perKvaOver:121.00 }
 };
 const TERA_FEE_KWH_DEFAULT = { lighting:5.10, lowpower:5.10 }; // TERA手数料 円/kWh（税込・区分別管理／使用量のみに加算・契約容量には非加算）
 
@@ -1460,26 +1460,26 @@ const AREA_LABELS = { hokkaido:"北海道",tohoku:"東北",tokyo:"東京",chubu:
 function tsoBaseFor(area, cat, amp, kw, ym){
   const t = ym ? getWheelingTariff(area, ym) : null;
   if(cat==='lowpower'){
-    // 動力：主開閉器契約 円/kW
+    // 動力：実量契約 円/kW（TERAは実量制）
     if(t && t.power && t.power.basicCharge){
       const bc=t.power.basicCharge;
-      const perKw = bc.mainSwitchContract ?? bc.jissyoContract;
+      const perKw = bc.jissyoContract ?? bc.mainSwitchContract;
       return perKw * kw;
     }
     return TSO_BASE_LP[area]*kw; // フォールバック（旧固定値）
   }
-  // 電灯：主開閉器/SB契約ベース
+  // 電灯：実量契約ベース（TERAは実量制）
   if(t && t.lighting && t.lighting.basicCharge){
     const bc=t.lighting.basicCharge;
     // 契約容量(amp)→kVA換算（1kVA=10A）。契約容量なしは6kVA相当で最小計上
     const kva = (!amp||amp===0) ? 6 : amp/10;
-    if(bc.mainFirst6kVA !== undefined){
-      // 2段構成型（関西・中国・四国）：最初の6kVAまで定額＋超過分/kVA
-      if(kva<=6) return bc.mainFirst6kVA;
-      return bc.mainFirst6kVA + bc.mainPer1kVA*(kva-6);
-    } else if(bc.mainSwitchContract !== undefined){
-      // 実量・SB型：主開閉器 円/kVA × kVA
-      return bc.mainSwitchContract * kva;
+    if(bc.jissyoFirst6kW !== undefined){
+      // 2段構成型（関西・中国・四国）：最初の6kVAまで定額＋超過分/kVA（実量契約）
+      if(kva<=6) return bc.jissyoFirst6kW;
+      return bc.jissyoFirst6kW + bc.jissyoPer1kW*(kva-6);
+    } else if(bc.jissyoContract !== undefined){
+      // 実量契約型：実量 円/kW × kVA換算値（TERAは実量制）
+      return bc.jissyoContract * kva;
     }
   }
   // フォールバック（旧固定値ロジック）
