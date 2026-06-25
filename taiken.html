@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F5F0E9">
+<title>テラエナジーでんき｜あなたの電気が、活動の灯りになる</title>
+<style>
+  :root{
+    --bg:#F5F0E9; --ink:#4A4440; --muted:#8A8178;
+    --yellow:#FAE14B; --amber:#E1AF00; --blue:#6496C8;
+    --tera:#E1AF00; --kyu:#9b8e7c;
+    --card:#FBF8F2; --line:#E6DDCF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif;
+    line-height:1.7; padding:0 0 64px; overflow-x:hidden;
+  }
+  .wrap{max-width:480px; margin:0 auto; padding:0 22px;}
+  .serif{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;}
+
+  /* hero */
+  header{padding:40px 0 26px;}
+  .eyebrow{
+    font-size:12px; letter-spacing:.32em; color:var(--amber);
+    font-weight:700; text-transform:none; margin-bottom:18px;
+  }
+  h1{
+    font-size:30px; line-height:1.45; font-weight:600; letter-spacing:.01em;
+  }
+  h1 .em{
+    background:linear-gradient(transparent 62%, var(--yellow) 62%);
+    padding:0 .08em;
+  }
+  .lede{margin-top:16px; font-size:14.5px; color:var(--muted);}
+
+  /* lamp signature */
+  .lamp{
+    position:relative; height:208px; margin:14px 0 4px;
+    display:flex; align-items:flex-end; justify-content:center;
+  }
+  .lamp svg{width:100%; height:100%; display:block;}
+  .glow{transition:opacity .5s ease, r .5s ease;}
+  .donateRead{
+    position:absolute; top:30px; left:0; right:0; text-align:center;
+  }
+  .donateRead .amt{font-size:40px; font-weight:700; letter-spacing:.01em;}
+  .donateRead .amt .yen{font-size:20px; font-weight:600; margin-left:2px;}
+  .donateRead .cap{font-size:12.5px; color:var(--muted); margin-top:2px; letter-spacing:.04em;}
+
+  /* controls */
+  .panel{
+    background:var(--card); border:1px solid var(--line); border-radius:18px;
+    padding:20px 18px; margin-top:22px;
+  }
+  .row{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  label.k{font-size:13px; color:var(--muted); font-weight:600; letter-spacing:.04em;}
+  select{
+    font:inherit; font-size:15px; font-weight:600; color:var(--ink);
+    background:var(--bg); border:1px solid var(--line); border-radius:10px;
+    padding:8px 30px 8px 12px; -webkit-appearance:none; appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%238A8178' stroke-width='1.6'/></svg>");
+    background-repeat:no-repeat; background-position:right 10px center;
+  }
+  .usage{margin-top:18px;}
+  .usage .val{font-size:15px; font-weight:700;}
+  .usage .val span{font-size:12px; color:var(--muted); font-weight:500;}
+  input[type=range]{
+    width:100%; margin-top:12px; -webkit-appearance:none; appearance:none;
+    height:6px; border-radius:6px; background:linear-gradient(90deg,var(--amber),var(--yellow)); outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:24px; height:24px; border-radius:50%;
+    background:#fff; border:3px solid var(--amber); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.15);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:24px; height:24px; border-radius:50%; background:#fff;
+    border:3px solid var(--amber); cursor:pointer;
+  }
+
+  /* compare */
+  h2{font-size:13px; letter-spacing:.16em; color:var(--muted); font-weight:700; margin:34px 0 4px;}
+  .compare{margin-top:14px;}
+  .bar{margin:16px 0;}
+  .bar .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
+  .bar .name{font-size:14px; font-weight:700;}
+  .bar .name small{font-weight:500; color:var(--muted); font-size:11.5px; margin-left:6px;}
+  .bar .num{font-size:15px; font-weight:700;}
+  .bar .num span{font-size:11.5px; color:var(--muted); font-weight:500;}
+  .track{height:14px; border-radius:8px; background:#EFE8DC; overflow:hidden;}
+  .fill{height:100%; border-radius:8px; transition:width .5s ease;}
+  .fill.t{background:var(--tera);}
+  .fill.k{background:var(--kyu);}
+  .verdict{
+    margin-top:6px; font-size:14px; font-weight:600; text-align:center;
+    padding:12px; border-radius:12px; background:rgba(225,175,0,.10);
+  }
+  .verdict .hi{color:var(--amber);}
+  .note{font-size:11.5px; color:var(--muted); margin-top:12px; line-height:1.6;}
+
+  /* closing */
+  .closing{margin-top:38px; padding-top:30px; border-top:1px solid var(--line);}
+  .closing p{font-size:18px; line-height:1.85;}
+  .closing .small{font-size:13px; color:var(--muted); margin-top:0;}
+  .closing .ctitle{font-size:14.5px; font-weight:700; color:var(--ink); letter-spacing:.02em; margin-bottom:10px;}
+  .closing .closer{margin-top:26px;}
+  .foot{margin-top:30px; font-size:11px; color:var(--muted); letter-spacing:.04em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">テラエナジーでんき ｜ 市場連動プラン</div>
+    <h1 class="serif">あなたの電気が、<br><span class="em">活動の灯り</span>になる。</h1>
+    <p class="lede">電気を使うほど、その一部が非営利活動の財源として灯りつづけます。電気代を「だれかを照らすもの」に。</p>
+  </header>
+
+  <!-- 灯り signature -->
+  <div class="lamp">
+    <svg viewBox="0 0 320 208" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+      <!-- 地平線 -->
+      <path d="M0 168 Q160 150 320 168 L320 208 L0 208 Z" fill="#E1AF00" opacity="0.16"/>
+      <path d="M0 168 Q160 150 320 168" fill="none" stroke="#E1AF00" stroke-width="2" opacity="0.5"/>
+      <!-- 灯り（寄付額に連動） -->
+      <circle id="glowOuter" class="glow" cx="160" cy="150" r="70" fill="#FAE14B" opacity="0.18"/>
+      <circle id="glowMid"   class="glow" cx="160" cy="150" r="44" fill="#FAE14B" opacity="0.34"/>
+      <circle id="bulb"      class="glow" cx="160" cy="150" r="22" fill="#FAE14B"/>
+      <!-- フィラメント -->
+      <path d="M152 150 q8 -12 16 0" fill="none" stroke="#6496C8" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <div class="donateRead">
+      <div class="amt"><span id="donateAmt">2,754</span><span class="yen">円/年</span></div>
+      <div class="cap">が非営利活動の財源に</div>
+    </div>
+  </div>
+
+  <!-- controls -->
+  <div class="panel">
+    <div class="row">
+      <label class="k" for="area">お住まいのエリア</label>
+      <select id="area" aria-label="エリアを選択">
+        <option value="北海道">北海道</option>
+        <option value="東北">東北</option>
+        <option value="東京" selected>東京</option>
+        <option value="中部">中部</option>
+        <option value="北陸">北陸</option>
+        <option value="関西">関西</option>
+        <option value="中国">中国</option>
+        <option value="四国">四国</option>
+        <option value="九州">九州</option>
+      </select>
+    </div>
+    <div class="usage">
+      <div class="row">
+        <label class="k" for="kwh">1か月の使用量</label>
+        <div class="val"><span id="kwhVal">300</span> <span>kWh / 月</span></div>
+      </div>
+      <input type="range" id="kwh" min="100" max="700" step="10" value="300" aria-label="月間使用量">
+    </div>
+  </div>
+
+  <!-- compare -->
+  <h2>1年間の電気代でくらべる</h2>
+  <div class="compare">
+    <div class="bar">
+      <div class="top">
+        <div class="name">TERA <small>市場連動</small></div>
+        <div class="num"><span>約</span> <span id="teraCost">113,400</span><span>円</span></div>
+      </div>
+      <div class="track"><div class="fill t" id="teraFill" style="width:90%"></div></div>
+    </div>
+    <div class="bar">
+      <div class="top">
+        <div class="name">旧一般電気事業者 <small>従量電灯</small></div>
+        <div class="num"><span>約</span> <span id="kyuCost">114,480</span><span>円</span></div>
+      </div>
+      <div class="track"><div class="fill k" id="kyuFill" style="width:91%"></div></div>
+    </div>
+    <div class="verdict" id="verdict">このエリアでは <span class="hi">ほぼ同じ</span></div>
+    <p class="note" id="note">※ 2025年度の市場価格実績にもとづく目安です。旧一電は従量電灯の標準的な単価帯（第2段階）で試算しています。実際の金額は契約内容・使用パターンで変わります。</p>
+  </div>
+
+  <!-- closing -->
+  <div class="closing">
+    <p class="ctitle">安心してご利用いただくために</p>
+    <p class="small">価格は市場連動なので、時間帯や季節によって30分毎に大きく上下します。だからこそ毎日の「テラゾウのでんき予報」と高騰時の価格アラートで、高くなることを前もってお知らせしています。</p>
+  </div>
+
+  <div class="foot">TERA Energy株式会社 ｜ テラエナジーでんき（市場連動プラン）</div>
+
+</div>
+
+<script>
+  // 2025年度の実額（円/kWh・税込）。tera=市場連動, kyu=旧一電(従量電灯・第2段階目安)
+  const DATA = {
+    "北海道":{tera:32.0, kyu:37.6},
+    "東北":  {tera:32.1, kyu:30.7},
+    "東京":  {tera:31.5, kyu:31.8},
+    "中部":  {tera:31.2, kyu:29.8},
+    "北陸":  {tera:29.5, kyu:29.7},
+    "関西":  {tera:30.0, kyu:30.4},
+    "中国":  {tera:31.0, kyu:32.3},
+    "四国":  {tera:29.1, kyu:33.0},
+    "九州":  {tera:29.4, kyu:27.8}
+  };
+  const DONATE_PER_KWH = 0.765; // テラ手数料5.1円 × 15%（従量電灯・低圧電力）
+
+  const $ = id => document.getElementById(id);
+  const yen = n => Math.round(n).toLocaleString('ja-JP');
+
+  function render(){
+    const area = $('area').value;
+    const kwhM = +$('kwh').value;
+    const kwhY = kwhM * 12;
+    const d = DATA[area];
+
+    const teraCost = kwhY * d.tera;
+    const kyuCost  = kwhY * d.kyu;
+    const donate   = kwhY * DONATE_PER_KWH;
+
+    $('kwhVal').textContent = kwhM;
+    $('teraCost').textContent = yen(teraCost);
+    $('kyuCost').textContent  = yen(kyuCost);
+    $('donateAmt').textContent = yen(donate);
+
+    // バーは両者の最大値を100%に
+    const max = Math.max(teraCost, kyuCost);
+    $('teraFill').style.width = (teraCost/max*100).toFixed(1) + '%';
+    $('kyuFill').style.width  = (kyuCost/max*100).toFixed(1) + '%';
+
+    // 判定
+    const diff = kyuCost - teraCost; // 正ならTERAが安い
+    const v = $('verdict');
+    if(Math.abs(d.tera - d.kyu) < 0.5){
+      v.innerHTML = 'このエリアでは <span class="hi">旧一電とほぼ同じ</span>';
+    }else if(diff > 0){
+      v.innerHTML = 'TERAなら <span class="hi">年 約'+yen(diff)+'円おトク</span>';
+    }else{
+      v.innerHTML = 'このエリアは旧一電が <span class="hi">年 約'+yen(-diff)+'円安め</span>';
+    }
+
+    // 灯り（寄付額に連動：年2万円で最大）
+    const t = Math.min(donate/20000, 1);
+    $('glowOuter').setAttribute('r', 56 + t*34);
+    $('glowOuter').setAttribute('opacity', (0.12 + t*0.16).toFixed(2));
+    $('glowMid').setAttribute('r', 34 + t*22);
+    $('bulb').setAttribute('r', 16 + t*12);
+  }
+
+  $('area').addEventListener('change', render);
+  $('kwh').addEventListener('input', render);
+  render();
+</script>
+</body>
+</html>
