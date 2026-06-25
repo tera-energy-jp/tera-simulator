@@ -101,6 +101,7 @@
   }
   .verdict .hi{color:var(--amber);}
   .note{font-size:11.5px; color:var(--muted); margin-top:12px; line-height:1.6;}
+  .compare .usenote{font-size:12.5px; color:var(--ink); margin-top:14px; line-height:1.65; background:rgba(225,175,0,.07); padding:11px 13px; border-radius:10px;}
 
   /* closing */
   .closing{margin-top:38px; padding-top:30px; border-top:1px solid var(--line);}
@@ -165,24 +166,25 @@
   </div>
 
   <!-- compare -->
-  <h2>1年間の電気代でくらべる</h2>
+  <h2>電気代のめやすをくらべる</h2>
   <div class="compare">
     <div class="bar">
       <div class="top">
         <div class="name">TERA <small>市場連動</small></div>
-        <div class="num"><span>約</span> <span id="teraCost">113,400</span><span>円</span></div>
+        <div class="num"><span>約</span> <span id="teraCost">132,241</span><span>円</span></div>
       </div>
-      <div class="track"><div class="fill t" id="teraFill" style="width:90%"></div></div>
+      <div class="track"><div class="fill t" id="teraFill" style="width:100%"></div></div>
     </div>
     <div class="bar">
       <div class="top">
-        <div class="name">旧一般電気事業者 <small>従量電灯</small></div>
-        <div class="num"><span>約</span> <span id="kyuCost">114,480</span><span>円</span></div>
+        <div class="name">旧一般電気事業者 <small id="kyuPlan">スタンダードS</small></div>
+        <div class="num"><span>約</span> <span id="kyuCost">128,977</span><span>円</span></div>
       </div>
-      <div class="track"><div class="fill k" id="kyuFill" style="width:91%"></div></div>
+      <div class="track"><div class="fill k" id="kyuFill" style="width:98%"></div></div>
     </div>
-    <div class="verdict" id="verdict">このエリアでは <span class="hi">ほぼ同じ</span></div>
-    <p class="note" id="note">※ 2025年度の市場価格実績にもとづく目安です。旧一電は従量電灯の標準的な単価帯（第2段階）で試算しています。実際の金額は契約内容・使用パターンで変わります。</p>
+    <div class="verdict" id="verdict">いまの使い方では <span class="hi">ほぼ同じくらい</span></div>
+    <p class="usenote">TERAは市場連動です。たくさん使う月ほど、旧一般電気事業者よりお得になりやすい仕組みです。</p>
+    <p class="note" id="note">※ 旧一般電気事業者は<span id="planNote">、各エリアの現行自由料金との比較です。</span>2023〜2025年度の確定値で計算し、年額を平均しています（燃料費の高騰期を含むため、自由料金はやや高めに出ます）。TERAは市場連動の実績にもとづくめやすで、実際の金額は契約内容・使用パターンで変わります。</p>
   </div>
 
   <!-- closing -->
@@ -196,64 +198,89 @@
 </div>
 
 <script>
-  // 2025年度の実額（円/kWh・税込）。tera=市場連動, kyu=旧一電(従量電灯・第2段階目安)
+  // 旧一電=各エリアの現行自由料金プランとの比較（2023〜2025年度・年額の平均, 税込）。tera=市場連動。
+  const POINTS = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700];
   const DATA = {
-    "北海道":{tera:32.0, kyu:37.6},
-    "東北":  {tera:32.1, kyu:30.7},
-    "東京":  {tera:31.5, kyu:31.8},
-    "中部":  {tera:31.2, kyu:29.8},
-    "北陸":  {tera:29.5, kyu:29.7},
-    "関西":  {tera:30.0, kyu:30.4},
-    "中国":  {tera:31.0, kyu:32.3},
-    "四国":  {tera:29.1, kyu:33.0},
-    "九州":  {tera:29.4, kyu:27.8}
+    "北海道":{tera:[55137, 75604, 96071, 116538, 137005, 157472, 177939, 198406, 218873, 239340, 259807, 280274, 300741],kyu:[59132, 81591, 105559, 129527, 154388, 180588, 206789, 232989, 259189, 285389, 311589, 337789, 363990],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "東北":{tera:[52132, 72759, 93386, 114014, 134641, 155268, 175896, 196523, 217151, 237778, 258405, 279033, 299660],kyu:[48851, 67166, 87101, 107037, 126972, 149277, 171582, 193887, 216192, 238498, 260803, 283108, 305413],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "東京":{tera:[51462, 71657, 91852, 112046, 132241, 152436, 172631, 192826, 213021, 233215, 253410, 273605, 293800],kyu:[48216, 67219, 87805, 108391, 128977, 152017, 175057, 198098, 221138, 244178, 267218, 290258, 313298],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "中部":{tera:[50394, 70443, 90492, 110541, 130590, 150639, 170688, 190737, 210786, 230835, 250884, 270933, 290982],kyu:[47990, 65886, 84856, 103825, 122795, 143534, 164274, 185013, 205753, 226492, 247232, 267971, 288711],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "北陸":{tera:[49271, 68098, 86925, 105752, 124580, 143407, 162234, 181061, 199889, 218716, 237543, 256370, 275198],kyu:[47862, 65933, 84938, 103943, 122948, 142979, 163010, 183041, 203072, 223103, 243134, 263165, 283196],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "関西":{tera:[39570, 58775, 77979, 97184, 116388, 135593, 154797, 174001, 193206, 212410, 231615, 250819, 270024],kyu:[33944, 51843, 70653, 89462, 108271, 129301, 150330, 171359, 192389, 213418, 234447, 255477, 276506],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "中国":{tera:[41244, 61212, 81181, 101149, 121117, 141086, 161054, 181023, 200991, 220960, 240928, 260897, 280865],kyu:[35054, 54113, 74953, 95793, 116633, 138746, 160858, 182970, 205082, 227194, 249306, 271419, 293531],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "四国":{tera:[39632, 58722, 77813, 96903, 115993, 135083, 154173, 173263, 192354, 211444, 230534, 249624, 268714],kyu:[38876, 58719, 80150, 101582, 123013, 145231, 167448, 189666, 211883, 234101, 256318, 278536, 300753],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]},
+    "九州":{tera:[48832, 67790, 86749, 105708, 124666, 143625, 162584, 181542, 200501, 219460, 238418, 257377, 276336],kyu:[43869, 60230, 77935, 95640, 113345, 132189, 151034, 169879, 188724, 207569, 226414, 245258, 264103],donate:[918, 1377, 1836, 2295, 2754, 3213, 3672, 4131, 4590, 5049, 5508, 5967, 6426]}
   };
-  const DONATE_PER_KWH = 0.765; // テラ手数料5.1円 × 15%（従量電灯・低圧電力）
+  const PLAN = {"北海道":"エネとくポイントプラン", "東北":"よりそう+eねっとバリュー", "東京":"スタンダードS", "中部":"おとくプラン", "北陸":"従量電灯ネクスト", "関西":"なっトクでんき", "中国":"ぐっとずっと。プラン スマートコース", "四国":"おトクeプラン", "九州":"スマートファミリープラン"};
 
   const $ = id => document.getElementById(id);
   const yen = n => Math.round(n).toLocaleString('ja-JP');
 
+  // POINTS上の線形補間
+  function interp(arr, x){
+    if(x<=POINTS[0]) return arr[0];
+    if(x>=POINTS[POINTS.length-1]) return arr[arr.length-1];
+    for(let i=0;i<POINTS.length-1;i++){
+      if(x>=POINTS[i] && x<=POINTS[i+1]){
+        const t=(x-POINTS[i])/(POINTS[i+1]-POINTS[i]);
+        return arr[i]+(arr[i+1]-arr[i])*t;
+      }
+    }
+    return arr[arr.length-1];
+  }
+  // TERAが旧一電を下回る使用量（10kWh丸め）。全域安=0, 範囲内で逆転しない=null
+  function crossPoint(d){
+    if(d.tera.every((v,i)=>v<d.kyu[i])) return 0;
+    for(let i=0;i<POINTS.length-1;i++){
+      const a=d.tera[i]-d.kyu[i], b=d.tera[i+1]-d.kyu[i+1];
+      if(a>0 && b<=0){
+        const k=POINTS[i]+(POINTS[i+1]-POINTS[i])*a/(a-b);
+        return Math.round(k/10)*10;
+      }
+    }
+    return null;
+  }
+
   function render(){
-    const area = $('area').value;
-    const kwhM = +$('kwh').value;
-    const kwhY = kwhM * 12;
-    const d = DATA[area];
+    const area=$('area').value, kwhM=+$('kwh').value;
+    const d=DATA[area];
+    const teraCost=interp(d.tera,kwhM), kyuCost=interp(d.kyu,kwhM), donate=interp(d.donate,kwhM);
 
-    const teraCost = kwhY * d.tera;
-    const kyuCost  = kwhY * d.kyu;
-    const donate   = kwhY * DONATE_PER_KWH;
+    $('kwhVal').textContent=kwhM;
+    $('teraCost').textContent=yen(teraCost);
+    $('kyuCost').textContent=yen(kyuCost);
+    $('donateAmt').textContent=yen(donate);
+    $('kyuPlan').textContent=PLAN[area];
+    $('planNote').textContent='、'+area+'エリアの現行自由料金「'+PLAN[area]+'」との比較です。';
 
-    $('kwhVal').textContent = kwhM;
-    $('teraCost').textContent = yen(teraCost);
-    $('kyuCost').textContent  = yen(kyuCost);
-    $('donateAmt').textContent = yen(donate);
+    const max=Math.max(teraCost,kyuCost);
+    $('teraFill').style.width=(teraCost/max*100).toFixed(1)+'%';
+    $('kyuFill').style.width=(kyuCost/max*100).toFixed(1)+'%';
 
-    // バーは両者の最大値を100%に
-    const max = Math.max(teraCost, kyuCost);
-    $('teraFill').style.width = (teraCost/max*100).toFixed(1) + '%';
-    $('kyuFill').style.width  = (kyuCost/max*100).toFixed(1) + '%';
-
-    // 判定
-    const diff = kyuCost - teraCost; // 正ならTERAが安い
-    const v = $('verdict');
-    if(Math.abs(d.tera - d.kyu) < 0.5){
-      v.innerHTML = 'このエリアでは <span class="hi">旧一電とほぼ同じ</span>';
-    }else if(diff > 0){
-      v.innerHTML = 'TERAなら <span class="hi">年 約'+yen(diff)+'円おトク</span>';
+    // 判定（勝敗を煽らず、事実＋使うほどお得の構造を伝える）
+    const diff=kyuCost-teraCost; // 正ならTERAが安い
+    const cp=crossPoint(d);
+    const v=$('verdict');
+    if(diff>1500){
+      v.innerHTML='いまの使い方なら TERAのほうが <span class="hi">年 約'+yen(diff)+'円 おトク</span>';
+    }else if(diff>=-1500){
+      v.innerHTML='いまの使い方では <span class="hi">ほぼ同じくらい</span>';
     }else{
-      v.innerHTML = 'このエリアは旧一電が <span class="hi">年 約'+yen(-diff)+'円安め</span>';
+      let m='いまの使い方では「'+PLAN[area]+'」が <span class="hi">年 約'+yen(-diff)+'円 安め</span>です。';
+      if(cp && cp>kwhM){ m+='<br>月 <b>'+cp+'kWh</b> 以上お使いなら、TERAのほうがお得になります。'; }
+      v.innerHTML=m;
     }
 
     // 灯り（寄付額に連動：年2万円で最大）
-    const t = Math.min(donate/20000, 1);
-    $('glowOuter').setAttribute('r', 56 + t*34);
-    $('glowOuter').setAttribute('opacity', (0.12 + t*0.16).toFixed(2));
-    $('glowMid').setAttribute('r', 34 + t*22);
-    $('bulb').setAttribute('r', 16 + t*12);
+    const t=Math.min(donate/20000,1);
+    $('glowOuter').setAttribute('r',56+t*34);
+    $('glowOuter').setAttribute('opacity',(0.12+t*0.16).toFixed(2));
+    $('glowMid').setAttribute('r',34+t*22);
+    $('bulb').setAttribute('r',16+t*12);
   }
 
-  $('area').addEventListener('change', render);
-  $('kwh').addEventListener('input', render);
+  $('area').addEventListener('change',render);
+  $('kwh').addEventListener('input',render);
   render();
 </script>
 </body>
