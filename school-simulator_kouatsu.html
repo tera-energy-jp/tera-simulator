@@ -314,13 +314,15 @@ window.TERA_MASTER = (function () {
     const avg=Object.keys(TOU_HOURS).reduce((s,b)=>s+tou[b]*TOU_HOURS[b],0)/24;
     const o={}; Object.keys(tou).forEach(b=>o[b]=tou[b]/avg); return o;
   }
+  const PROFILE_FALLBACK = {home_standard:'peak',home_single:'peak',home_allelectric:'night',biz_daytime:'office',biz_night:'night',hv_office:'office',hv_factory_flat:'flat',hv_peak:'peak',hv_night:'night'};
+  function profKey(k){ return PROFILES[k] ? k : (PROFILE_FALLBACK[k]||'flat'); }
   function effFactorOf(profileKey, weekdayOnly, touNorm, weekendRatio){
-    const w=PROFILES[profileKey].w;
+    const w=PROFILES[profKey(profileKey)].w;
     const ewd=Object.keys(touNorm).reduce((s,b)=>s+(w[b]||0)*touNorm[b],0);
     return weekdayOnly ? ewd : ewd*(WD_SHARE + WE_SHARE*weekendRatio);
   }
   function daytimeShare(profileKey, weekdayOnly){
-    const w=PROFILES[profileKey].w;
+    const w=PROFILES[profKey(profileKey)].w;
     const wdDay=Object.keys(w).reduce((s,b)=>s+(w[b]||0)*(BLOCK_DAYTIME[b]||0),0);
     return weekdayOnly ? wdDay : wdDay*WD_SHARE;
   }
