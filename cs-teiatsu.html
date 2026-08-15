@@ -211,7 +211,7 @@ select:focus,input:focus{outline:2px solid var(--tera-orange);outline-offset:-1p
 .tot.best::after{content:"年平均 最安";position:absolute;top:10px;right:10px;
   font-size:.66rem;font-weight:700;background:var(--tera);color:#fff;padding:2px 9px;border-radius:10px;letter-spacing:.04em}
 
-/* 5年振り返りグラフ */
+/* 直近4年振り返りグラフ */
 .chart-wrap{width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 14px 10px;overflow-x:auto}
 .chart-svg{display:block;width:100%;min-width:540px;height:auto}
 .chart-legend{display:flex;justify-content:center;gap:20px;margin-top:10px;font-size:.83rem;flex-wrap:wrap;padding:6px 0}
@@ -1934,7 +1934,7 @@ function estimateKwhFromTotal(area, plan, cat, totalYen, ym, opt){
 let CAT='lighting', MODE='flat', USEGOV=true;
 let FLAT_MODE='kwh';  // 'kwh' or 'yen' （月平均欄の入力モード）
 let BASE_PLAN='reg';  // 'reg' or 'free' （料金からの逆算ベースプラン）
-let LAST5 = null;  // 5年シミュレーション結果
+let LAST5 = null;  // 年度シミュレーション結果（直近4年＋2022補足）
 let LAST_CUR = null; // 直近12ヶ月の結果
 let RENEW100 = false, RENEW_UNIT = 1.1; // 再エネ100%オプション（従量に上乗せ・円/kWh）
 const $ = s => document.querySelector(s);
@@ -2127,7 +2127,7 @@ function collectMonths(){
       // 推定結果を画面に表示
       const planLab=BASE_PLAN==='reg'?'大手規制':'大手自由';
       $('#estimateInfo').style.display='';
-      $('#estimateInfo').innerHTML = `📊 月額 <b>¥${k.toLocaleString()}</b>（${planLab}料金・${refYm}基準）から推定 → 月平均 <b>${estKwh} kWh</b> として5年シミュレーションします`;
+      $('#estimateInfo').innerHTML = `📊 月額 <b>¥${k.toLocaleString()}</b>（${planLab}料金・${refYm}基準）から推定 → 月平均 <b>${estKwh} kWh</b> としてシミュレーションします`;
       k=estKwh;
     }else if(FLAT_MODE==='kwh'){
       $('#estimateInfo').style.display='none';
@@ -2189,7 +2189,7 @@ $('#calcBtn').onclick=()=>{
     });
     LAST_CUR={area, cat:CAT, opt, months, sum:sumCur, det:detCur, n:months.length};
 
-    // ② 5年シミュレーション
+    // ② 年度シミュレーション（直近4年＋2022補足）
     LAST5=simulate5Years(area, months, opt, CAT);
 
     render();
@@ -2209,7 +2209,7 @@ $('#calcBtn').onclick=()=>{
 $('#renew100').onchange=e=>{ RENEW100=e.target.checked; if(LAST5 || LAST_CUR) $('#calcBtn').onclick(); };
 $('#renewUnit').oninput=e=>{ RENEW_UNIT=Number(e.target.value)||1.1; if(RENEW100 && (LAST5||LAST_CUR)) $('#calcBtn').onclick(); };
 
-/* ========= 5年シミュレーション ========= */
+/* ========= 年度シミュレーション（直近4年＋2022補足） ========= */
 function simulate5Years(area, months, opt, cat){
   const results={};
   const n=months.length;
@@ -2330,37 +2330,37 @@ function planNames(){
 }
 function renderVerdict(){
   const {totals} = LAST5;
+  const NY = LAST5.nYears || 4;     // ⑬ 主表示は直近4年（2023〜2026年度）
   const teraTotal=totals.tera;
   const regTotal=totals.reg;
   const freeTotal=totals.free;
   const vs_reg = regTotal - teraTotal;  // +なら規制よりTERA安
   const vs_free = freeTotal - teraTotal;
-  const avg_vs_reg = vs_reg / 5;
-  const avg_vs_free = vs_free / 5;
+  const avg_vs_reg = vs_reg / NY;
+  const avg_vs_free = vs_free / NY;
 
   // 結論コピー生成
-  let eyebrow = '過去5年トータルで振り返ると';
+  let eyebrow = '直近4年（2023〜2026年度）トータルで振り返ると';
   let headline, lede;
   const PN = planNames();
   const areaCo = AREA_LABELS[$('#area').value]+'電力';
 
   if (vs_reg > 0 && vs_free > 0) {
-    // TERAが規制・自由ともに5年合計で最安
+    // TERAが規制・自由ともに直近4年合計で最安
     headline = 'テラエナジーでんき 市場連動プランは、'+areaCo+'の<br>'
       + '規制料金【'+PN.reg+'】および自由料金【'+PN.free+'】より<br>'
       + '<span class="num">'+yen(avg_vs_reg)+'/年</span>（vs 規制）'
       + '・<span class="num">'+yen(avg_vs_free)+'/年</span>（vs 自由）'
       + 'お得でした。';
-    lede = '2022年危機時は規制料金が一時的にTERAより安かったかもしれませんが、'
-      + 'その後の平常期でTERAが伸び、5年トータルでは規制・自由のどちらも上回る経済合理性が出ています。';
+    lede = '直近4年の市場水準では、規制・自由のどちらに対してもTERA市場連動の経済合理性が出ています。'
+      + '2022年度のような市場高騰時は規制料金が一時的に有利になることがあります（下の再来シナリオでご確認いただけます）。';
   } else if (vs_reg < 0 && vs_free > 0) {
     // 規制より高いが自由よりは安い
     headline = 'テラエナジーでんき 市場連動プランは、'+areaCo+'の<br>'
       + '規制料金【'+PN.reg+'】より<span class="num neg">'+yen(-avg_vs_reg)+'/年</span>高めですが、'
       + '<br>自由料金【'+PN.free+'】より<span class="num">'+yen(avg_vs_free)+'/年</span>お得でした。';
-    lede = '2022年の燃料危機の影響が長く尾を引いたケースです。'
-      + 'ただし上限なしの自由料金には常に優位で、規制料金との差も縮小傾向にあります。'
-      + '危機の影響が抜けた直近の年度を見れば、TERAの優位がより明確に出ます。';
+    lede = '直近4年では規制料金がわずかに有利なケースです。'
+      + 'ただし上限なしの自由料金には優位で、規制料金との差も縮小傾向にあります。年度別の内訳もご確認ください。';
   } else if (vs_reg > 0 && vs_free < 0) {
     // 規制より安いが自由より高い（あまり起きないはず）
     headline = 'テラエナジーでんき 市場連動プランは、'+areaCo+'の<br>'
@@ -2373,17 +2373,17 @@ function renderVerdict(){
       + '<span class="num neg">'+yen(-avg_vs_reg)+'/年</span>（vs 規制）'
       + '・<span class="num neg">'+yen(-avg_vs_free)+'/年</span>（vs 自由）'
       + '高めでした。';
-    lede = 'この条件・エリアでは、過去5年では大手プランが優位な結果に。'
+    lede = 'この条件・エリアでは、直近4年では大手プランが優位な結果に。'
       + 'シミュレーション条件（契約容量・使用量パターン）を変えると結果が変わる可能性があります。';
   }
 
-  // 年平均の3カード（5年合計を5で割った1年あたりの平均額）
+  // 年平均の3カード（直近4年合計をNYで割った1年あたりの平均額）
   const totsArr=[
-    {k:'tera', lab:'TERA市場連動', val:teraTotal/5},
-    {k:'reg',  lab:'大手規制料金', val:regTotal/5},
-    {k:'free', lab:'大手自由料金', val:freeTotal/5}
+    {k:'tera', lab:'TERA市場連動', val:teraTotal/NY},
+    {k:'reg',  lab:'大手規制料金', val:regTotal/NY},
+    {k:'free', lab:'大手自由料金', val:freeTotal/NY}
   ];
-  const minVal=Math.min(teraTotal/5, regTotal/5, freeTotal/5);
+  const minVal=Math.min(teraTotal/NY, regTotal/NY, freeTotal/NY);
 
   // 寄付額（直近12ヶ月の平均使用量ベース）
   const don = LAST_CUR ? calcDonation(LAST_CUR.months, LAST_CUR.opt) : {monthly:0, annual:0};
@@ -2418,7 +2418,7 @@ function renderVerdict(){
     + '</div>';
 }
 
-/* ② 5年振り返り棒グラフ（SVG） */
+/* ② 直近4年振り返り棒グラフ（SVG） */
 function render5YearChart(){
   const {years} = LAST5;
   const FYS = FY_MAIN;   /* ⑬ 主グラフは直近4年。2022年度は混ぜない（別ブロックの再来シナリオへ） */
@@ -2442,7 +2442,7 @@ function render5YearChart(){
   // 切り上げ：1万円単位
   const yMax=Math.ceil(maxV/10000)*10000 * 1.05;
 
-  // 5年×3本のバー配置
+  // 4年×3本のバー配置
   const groupW=innerW/FYS.length;
   const barW=Math.min(groupW/4.2, 38);
   const gap=4;
@@ -2621,8 +2621,9 @@ function renderCrisisVsNormal(){
     box('crisis', '危機', '2022年度並み（燃料価格急騰）の年が来たら', crisis)
     + box('normal', '平常', '2024年度並み（平常期）の年なら', normal);
 
-  // ナラティブ生成：5年トータルが優位かどうかを軸に、危機年の損は平常年の積み上げでカバーできる構造を伝える
+  // ナラティブ生成：直近4年（主表示）が優位かどうかを軸に、危機年の損は平常年の積み上げでカバーできる構造を伝える
   const {totals} = LAST5;
+  const NY = LAST5.nYears || 4;
   const total_gain_reg  = totals.reg  - totals.tera;  // +ならTERAが規制比でトク
   const total_gain_free = totals.free - totals.tera;
   const crisis_tera_loss = crisis.tera - Math.min(crisis.reg, crisis.free); // 危機年でTERAが安い方の大手と比べてどれだけ高いか
@@ -2630,22 +2631,22 @@ function renderCrisisVsNormal(){
 
   let narr;
   if (crisis_tera_loss > 0 && total_gain_reg > 0) {
-    // ★典型ケース：危機年は規制に負けるが、5年トータルでは規制を上回る
+    // ★典型ケース：危機年は規制に負けるが、直近4年（主表示）では規制を上回る
     narr = '<b>読み方：</b>2022年危機型の年だけ切り取ると、TERA市場連動は安い方の大手プランより年間約'
       + yen(crisis_tera_loss) + '高くなる結果となりました。'
       + '<br>一方、2024年のような平常期にはTERA市場連動が大手より' + (normal_tera_gain>0?'約'+yen(normal_tera_gain)+'安く済みます':'同等以下です') + '。'
-      + '<br><b>5年の中で危機年は通常1〜2年、平常年が3〜4年。平常年の節約が積み重なることで、危機年の上振れを十分カバーするのが市場連動の経済合理性です。</b>'
-      + '（実際このシミュレーションでも、年平均でTERAは規制比 ' + yen(total_gain_reg/5) + ' / 自由比 ' + yen(total_gain_free/5) + ' お得になっています）';
+      + '<br><b>2022年度のような高騰は過去5年で1度。平常年の節約が積み重なることで、高騰年の上振れをカバーしていくのが市場連動の経済合理性です。</b>'
+      + '（実際このシミュレーションでも、直近4年の年平均でTERAは規制比 ' + yen(total_gain_reg/NY) + ' / 自由比 ' + yen(total_gain_free/NY) + ' お得になっています）';
   } else if (crisis_tera_loss <= 0) {
     // 危機年でもTERAが優位な特殊ケース
     narr = '<b>読み方：</b>このエリア・契約条件では、2022年危機型の年でもTERA市場連動が安い方の大手プランより安い結果でした。'
-      + '危機耐性がもともと強いケースです。年平均でも、'
-      + (total_gain_reg>0 ? 'TERA市場連動は規制比 '+yen(total_gain_reg/5)+' お得です' : '規制とほぼ同等です')
+      + '危機耐性がもともと強いケースです。直近4年の年平均でも、'
+      + (total_gain_reg>0 ? 'TERA市場連動は規制比 '+yen(total_gain_reg/NY)+' お得です' : '規制とほぼ同等です')
       + '。';
   } else if (total_gain_reg <= 0 && normal_tera_gain > 0) {
-    // 平常年は勝てるけど、5年トータルでは規制に負ける
+    // 平常年は勝てるけど、直近4年トータルでは規制に負ける
     narr = '<b>読み方：</b>平常年（2024年型）はTERAが大手より約'+yen(normal_tera_gain)+'安いですが、'
-      + '2022年の危機の影響が長く続き、5年合計では規制料金にやや及びませんでした。'
+      + '直近4年の合計では規制料金にやや及びませんでした。'
       + '<br>この条件では、危機年の上振れを平常年だけでは取り戻しきれないケースです。'
       + 'JEPX月別実測による実勢パターンを反映しています（ロードカーブ加重は次段階で更新予定です）。';
   } else {
@@ -2692,7 +2693,7 @@ function renderCurrent12(){
   if(diff>=0){
     $('#savings').innerHTML='直近12ヶ月（あなたの入力期間）で見ると、<b>TERA市場連動は<br>安い方の大手プランより 年間 '+yen(diff)+' お得</b>です（推計）';
   } else {
-    $('#savings').innerHTML='直近12ヶ月では大手プランの方が <b class="neg">年間 '+yen(-diff)+'</b> 安いという結果でした。<br>この期間の試算だけでなく、<br>上の「過去5年振り返り」で全体の傾向もあわせてご確認ください。';
+    $('#savings').innerHTML='直近12ヶ月では大手プランの方が <b class="neg">年間 '+yen(-diff)+'</b> 安いという結果でした。<br>この期間の試算だけでなく、<br>上の「直近4年の振り返り」で全体の傾向もあわせてご確認ください。';
   }
 }
 

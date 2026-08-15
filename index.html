@@ -257,7 +257,7 @@ select:focus,input:focus{outline:2px solid var(--tera-orange);outline-offset:-1p
   padding:2px 6px;border-radius:8px;letter-spacing:.04em
 }
 
-/* 5年グラフ */
+/* 直近4年グラフ */
 .chart-wrap{
   width:100%;background:#fff;border:1px solid var(--line);
   border-radius:11px;padding:16px 10px 8px;overflow-x:auto
@@ -2260,11 +2260,11 @@ function renderCrisisVsNormal(){
   if(crisis_loss>0&&gain_reg>0){
     narr='<b>読み方：</b>2022年のような危機型の年だけ見ると、TERA市場連動は安い方の大手プランより約'+yen(crisis_loss)+'高くなりました。'
       +'<br>一方、2024年のような平常期にはTERAが大手より'+(normal_gain>0?'約'+yen(normal_gain)+'安く':'同等以下で')+'済みます。'
-      +'<br><b>5年の中で危機年は1〜2年、平常年が3〜4年。平常年の節約が積み重なり、危機年の上振れを十分カバーするのが市場連動の経済合理性です。</b>';
+      +'<br><b>2022年度のような高騰は過去5年で1度。平常年の節約が積み重なり、高騰年の上振れをカバーしていくのが市場連動の経済合理性です。</b>';
   }else if(crisis_loss<=0){
     narr='<b>読み方：</b>このエリア・条件では、2022年危機型の年でもTERA市場連動が大手プランより有利でした。危機耐性がもともと強いケースです。';
   }else{
-    narr='<b>読み方：</b>平常期はTERAが有利ですが、2022年危機の影響が長く続き、5年合計では差が縮まっています。ご利用時間帯パターンの設定を変えると結果が変わる場合があります。';
+    narr='<b>読み方：</b>平常期はTERAが有利ですが、2022年度のような高騰年には差が縮まることがあります。ご利用時間帯パターンの設定を変えると結果が変わる場合があります。';
   }
   $('#crisisNarr').innerHTML=narr;
 }
@@ -2281,7 +2281,7 @@ function renderCurrent12(){
   const diff=ann(Math.min(sum.reg,sum.free)-sum.tera);
   $('#savings').innerHTML=diff>=0
     ?'直近12ヶ月では、<b>TERA市場連動は安い方の大手プランより 年間 '+yen(diff)+' お得</b>です（推計）'
-    :'直近12ヶ月では大手プランの方が <b class="neg">年間 '+yen(-diff)+'</b> 安い結果でした。上の5年グラフも合わせてご確認ください。';
+    :'直近12ヶ月では大手プランの方が <b class="neg">年間 '+yen(-diff)+'</b> 安い結果でした。上の年度別グラフも合わせてご確認ください。';
 }
 
 function renderSrc(){
