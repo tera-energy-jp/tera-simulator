@@ -283,5 +283,23 @@
   $('kwh').addEventListener('input',render);
   render();
 </script>
+<!-- iframe高さ通知（WEBベンダー提供：親へpostMessageで高さ送信／ResizeObserverガード付き） -->
+<script>
+(function() {
+  var wrap = document.querySelector('body > div.wrap');
+  if (!wrap) return;
+  function sendHeight() {
+    window.parent.postMessage({ type: 'simulatorHeight', height: wrap.offsetHeight }, '*');
+  }
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(wrap);
+  } else {
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    document.addEventListener('click', function(){ setTimeout(sendHeight, 400); });
+  }
+  sendHeight();
+})();
+</script>
 </body>
 </html>
