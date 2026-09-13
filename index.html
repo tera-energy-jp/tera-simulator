@@ -1396,7 +1396,8 @@ const WHEELING_TARIFF = {
      2024-10 … 2024-10-01改定
      2025-04 … 2025年度（〜2025-09）
      2025-10 … 2025-10-01改定
-     2026-04 … 2026年度（現行）
+     2026-04 … 2026年度（〜2026-10）
+     2026-11 … 2026-11-01改定（現行）
 
    ※既存の 2019-10 / 2020-04 / 2021-10 のエントリはそのまま残してある（古い検針データ用）。
      ただし北陸の "2019-10" には実際には2023年度以降の値が入っているため、
@@ -1494,6 +1495,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
       lighting: { basicCharge:{ jissyoFirst6kW:290.40, jissyoPer1kW:96.80, mainFirst6kVA:240.90, mainPer1kVA:80.30 }, energyCharge:7.62 },
       power:    { basicCharge:{ jissyoContract:460.90, mainSwitchContract:378.40 }, energyCharge:4.69 },
     },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoFirst6kW:504.90, jissyoPer1kW:168.30, mainFirst6kVA:412.50, mainPer1kVA:137.50 }, energyCharge:8.25 },
+      power:    { basicCharge:{ jissyoContract:570.90, mainSwitchContract:468.60 }, energyCharge:5.10 },
+    },
   },
   chugoku: {
     '2022-04': { /* 2022年度 */
@@ -1535,6 +1540,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
     '2024-04': { /* 2024年度（〜2024-09） */
       lighting: { basicCharge:{ jissyoContract:227.38, mainSwitchContract:162.24 }, energyCharge:7.87 },
       power:    { basicCharge:{ jissyoContract:571.44, mainSwitchContract:379.26 }, energyCharge:5.58 },
+    },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoContract:398.37, mainSwitchContract:284.24 }, energyCharge:7.80 },
+      power:    { basicCharge:{ jissyoContract:770.91, mainSwitchContract:511.64 }, energyCharge:5.53 },
     },
   },
 };
