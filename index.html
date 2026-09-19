@@ -458,7 +458,7 @@ details.src .body{padding:7px 0 0;line-height:1.85}
         <div id="pfWrap" style="display:none">
           <label class="fld">力率（%）── 低圧電力のみ</label>
           <input type="number" id="pf" value="100" min="50" max="100" step="1" style="max-width:130px">
-          <div class="hint" style="margin-top:4px">基準85%・1%ごとに基本料金が±1%変動。</div>
+          <div class="hint" style="margin-top:4px">大手（旧一電）の動力基本料金にだけ効きます。方式は各社の約款どおり：東北・中部・関西・四国・九州＝85%を超えると▲5%・下回ると＋5%／北海道・東京・北陸・中国＝力率割引なし。TERAの料金には効きません。</div>
         </div>
 
       </div>
@@ -1884,12 +1884,25 @@ function lightingBody(area,sysk,kwh,amp){
     return {body:Math.max(base+e,P.minMonthly||0),P,cls};
   }
 }
+/* === PF_LOWPOWER_RULE_FROM_MASTER ==========================================
+   ★生成ブロック（tools/patch_cs_index_pf.py が src/master.js から毎ビルド生成。手で編集しない）
+   旧一電・低圧電力の力率割引：段階5%（85%超→0.95／85%未満→1.05）または なし（1.0）。
+   TERA市場連動の低圧は元から力率割引なし（teraMonthly 側・係数1.0）。この関数は大手比較側専用。
+   ========================================================================================== */
+const PF_LOWPOWER_NONE  = { hokkaido:true, tokyo:true, hokuriku:true, chugoku:true };
+const PF_LOWPOWER_STEP5 = { tohoku:true, chubu:true, kansai:true, shikoku:true, kyushu:true };
+function lpPfFactor(area, pf){
+  if(PF_LOWPOWER_NONE[area]) return 1.0;
+  const p = Number(pf); if(!isFinite(p)) return 1.0;
+  if(PF_LOWPOWER_STEP5[area]) return p > 85 ? 0.95 : (p < 85 ? 1.05 : 1.0);
+  return 1 + (85 - p) / 100;   // 未分類エリアの保険（master.js に無いエリア）
+}
 // 大手・低圧電力 本体（基本料金×kW×力率 ＋ 季節別従量）
 function lowpowerBody(area,sysk,kwh,kw,pf,month){
   const P=RATE_PLANS[area]['lowpower_'+sysk];
   const summer=[7,8,9].includes(month);
   const unit=summer?P.seasonal.summer:P.seasonal.other;
-  let pfFactor=1; if(P.pf){pfFactor=1-(pf-85)*0.01;} // 力率割引：基準85%・1%毎±1%
+  let pfFactor=P.pf ? lpPfFactor(area,pf) : 1; // ★生成差し替え：段階5%／なし（区分は master.js）
   const base=P.basicPerKw*kw*pfFactor;
   return {body:base+unit*kwh,P,pfFactor};
 }
@@ -1908,7 +1921,7 @@ function utilityMonthly(area,sysk,cat,kwh,ym,opt){
     const P2=RATE_PLANS[area]['lowpower_free2'];
     const summer=[7,8,9].includes(mm);
     const unit2=summer?P2.seasonal.summer:P2.seasonal.other;
-    let pf2=1; if(P2.pf){pf2=1-(opt.pf-85)*0.01;}
+    let pf2=P2.pf ? lpPfFactor(area,opt.pf) : 1; // ★生成差し替え：段階5%／なし
     const body2=P2.basicPerKw*opt.kw*pf2+unit2*kwh;
     const total2=body2+fa+levy;
     if(total2<res.total){ res={total:total2, body:body2, fuel:fa, levy:levy, rawFuel:raw, pfFactor:pf2, altPlan:P2.plan}; }
