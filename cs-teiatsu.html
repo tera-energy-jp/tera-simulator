@@ -685,6 +685,7 @@ const FUEL_MASTER = {"discount":{"2023-02":7.0,"2023-03":7.0,"2023-04":7.0,"2023
    方式：min_charge=最低料金制(関西/中国/四国)、ampere=アンペア制(他6)
    単価=税込・円。tiers境界=120/300（北海道のみ120/280）。
    ============================================================ */
+/* ★RATE_PLANS_FROM_MASTER：この定数は tools/patch_cs_index_rateplans.py が src/master.js から毎ビルド注入する（手編集禁止） */
 const RATE_PLANS = {
 
   /* ===== 確定3エリア ===== */
@@ -704,28 +705,28 @@ const RATE_PLANS = {
   tokyo: {
     method: "ampere",
     lighting_reg: {
-      B: { confirmed:true, basicByAmp:{10:311.75,15:467.63,20:623.50,30:935.25,40:1247.00,50:1558.75,60:1870.50}, minMonthly:328.08, tiers:[29.80,36.40,40.49], tierBnd:[120,300] },
-      C: { confirmed:true, basicByKva:311.75, tiers:[29.80,36.40,40.49], tierBnd:[120,300], note:"2024-04改定後・電力量料金はB完全同単価（公式確定）" }
+      B: { confirmed:true, basicByAmp:{10:392.06,15:588.10,20:784.12,30:1176.18,40:1568.24,50:1960.30,60:2352.36}, minMonthly:368.64, tiers:[29.85,36.45,40.54], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・20261101_teiatsu_minaoshi_kisei.pdf" },
+      C: { confirmed:true, basicByKva:392.06, tiers:[29.85,36.45,40.54], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・電力量料金はB完全同単価（公式確定）" }
     },
     lighting_free: {
-      B: { confirmed:true, plan:"スタンダードS", basicByAmp:{10:311.75,15:467.63,20:623.50,30:935.25,40:1247.00,50:1558.75,60:1870.50}, minMonthly:328.08, tiers:[29.80,36.40,40.49], tierBnd:[120,300], capLiftYM:"2022-11" },
-      C: { confirmed:true, plan:"スタンダードL", basicByKva:311.75, tiers:[29.80,36.40,40.49], tierBnd:[120,300], capLiftYM:"2022-11", note:"スタンダードS完全同単価（公式確定）" }
+      B: { confirmed:true, plan:"スタンダードS", basicByAmp:{10:392.06,15:588.10,20:784.12,30:1176.18,40:1568.24,50:1960.30,60:2352.36}, minMonthly:368.64, tiers:[29.85,36.45,40.54], tierBnd:[120,300], capLiftYM:"2022-11", note:"★2026-11-01改定（託送反映）・20261101_teiatsu_minaoshi_ikinai.pdf・規制Bと完全同単価" },
+      C: { confirmed:true, plan:"スタンダードL", basicByKva:392.06, tiers:[29.85,36.45,40.54], tierBnd:[120,300], capLiftYM:"2022-11", note:"★2026-11-01改定（託送反映）・スタンダードS完全同単価（公式確定）" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1098.05, seasonal:{summer:27.14,other:25.57}, pf:true },
-    lowpower_free: { confirmed:true, plan:"動力プラン", basicPerKw:1098.05, seasonal:{summer:27.14,other:25.57}, pf:true, capLiftYM:"2022-11", note:"動力プラン(自由)=規制低圧電力と基本・従量とも完全同単価、燃調上限のみ差(東京電力公式確定)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1190.83, seasonal:{summer:27.19,other:25.62}, pf:true, note:"★2026-11-01改定（託送反映）" },
+    lowpower_free: { confirmed:true, plan:"動力プラン", basicPerKw:1190.83, seasonal:{summer:27.19,other:25.62}, pf:true, capLiftYM:"2022-11", note:"★2026-11-01改定（託送反映）・動力プラン(自由)=規制低圧電力と基本・従量とも完全同単価、燃調上限のみ差(東京電力公式確定)" },
   },
   chubu: {
     method: "ampere",
     lighting_reg: {
-      B: { confirmed:true, basicByAmp:{10:321.14,15:481.71,20:642.28,30:963.42,40:1284.56,50:1605.70,60:1926.84}, minMonthly:277.09, tiers:[21.20,25.67,28.62], tierBnd:[120,300] },
-      C: { confirmed:true, basicByKva:321.14, tiers:[21.20,25.67,28.62], tierBnd:[120,300], note:"2024-04改定後・電力量料金はB完全同単価（公式確定）" }
+      B: { confirmed:true, basicByAmp:{10:447.92,15:671.88,20:895.84,30:1343.76,40:1791.68,50:2239.60,60:2687.52}, minMonthly:340.88, tiers:[21.25,25.73,28.68], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・revision202611_02.pdf。2024-04〜2026-10の原価算定誤り（基本料金▲約1%）の訂正後単価に託送改定分を上乗せした値" },
+      C: { confirmed:true, basicByKva:447.92, tiers:[21.25,25.73,28.68], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・電力量料金はB完全同単価（公式確定）" }
     },
     lighting_free: {
-      B: { confirmed:true, plan:"おとくプラン", basicByAmp:{10:321.14,15:481.71,20:642.28,30:963.42,40:1284.56,50:1605.70,60:1926.84}, minMonthly:277.09, tiers:[21.20,25.67,28.62], tierBnd:[120,300], capLiftYM:"2022-12" },
-      C: { confirmed:true, plan:"とくとくプラン", basicByKva:321.14, tiers:[21.70,25.67,27.19], tierBnd:[120,300], capLiftYM:"2022-12", note:"とくとくプラン(7kVA以上対応)・基本料金は規制C同額、第1段階のみ規制より0.50円高/第3段階は1.43円安(2024-04公式PDF確定)" }
+      B: { confirmed:true, plan:"おとくプラン", basicByAmp:{10:447.92,15:671.88,20:895.84,30:1343.76,40:1791.68,50:2239.60,60:2687.52}, minMonthly:340.88, tiers:[21.25,25.73,28.68], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・revision202611_01.pdf・規制Bと同単価" },
+      C: { confirmed:true, plan:"とくとくプラン", basicByKva:447.92, tiers:[21.75,25.73,27.25], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・とくとくプラン(7kVA以上対応)・基本料金は規制C同額、第1段階のみ規制より0.50円高/第3段階は1.43円安（構造維持）" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1204.15, seasonal:{summer:16.84,other:15.29}, pf:true },
-    lowpower_free: { confirmed:true, basicPerKw:1204.15, seasonal:{summer:16.84,other:15.29}, pf:true, capLiftYM:"2022-12", note:"動力自由=規制低圧電力と同単価＝燃調上限のみ差(9社共通構造)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1360.32, seasonal:{summer:16.90,other:15.35}, pf:true, note:"★2026-11-01改定（託送反映）・特定小売供給約款 第19条" },
+    lowpower_free: { confirmed:true, basicPerKw:1360.32, seasonal:{summer:16.90,other:15.35}, pf:true, capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・動力自由=規制低圧電力と同単価として運用（★別件：ミライズの自由動力「ビジとくプラン」は基本 1,246.32円/kW（旧 1,090.15）で規制と異なる。どのプランを当てるか要判断）" },
   },
 
   /* ===== 北海道・東北・北陸・中国・四国・九州 =====
@@ -734,28 +735,28 @@ const RATE_PLANS = {
   hokkaido: {
     method: "ampere",
     lighting_reg: {
-      B: { confirmed:true, basicByAmp:{10:418.00,15:627.00,20:836.00,30:1254.00,40:1672.00,50:2090.00,60:2508.00}, minMonthly:427.95, tiers:[35.69,41.98,45.70], tierBnd:[120,280] },
-      C: { confirmed:true, basicByKva:418.00, tiers:[35.69,41.98,45.70], tierBnd:[120,280], note:"電力量料金はB完全同単価（公式確定）。tierBnd=120/280は北海道特殊" }
+      B: { confirmed:true, basicByAmp:{10:572.10,15:858.15,20:1144.20,30:1716.30,40:2288.40,50:2860.50,60:3432.60}, minMonthly:505.72, tiers:[35.77,42.06,45.78], tierBnd:[120,280], note:"★2026-11-01改定（託送反映）・revise_unitprice_regulated.pdf" },
+      C: { confirmed:true, basicByKva:572.10, tiers:[35.77,42.06,45.78], tierBnd:[120,280], note:"★2026-11-01改定（託送反映）・電力量料金はB完全同単価（公式確定）。tierBnd=120/280は北海道特殊" }
     },
     lighting_free: {
-      B: { confirmed:true, plan:"エネとくポイントプラン", basicByAmp:{10:308.00,15:517.00,20:726.00,30:1144.00,40:1562.00,50:1980.00,60:2398.00}, minMonthly:427.95, tiers:[35.69,41.98,45.70], tierBnd:[120,280], capLiftYM:"2022-12", note:"基本料金は従量電灯B−110円/月（公式明記）" },
-      C: { confirmed:false, plan:"(C相当独立メニューなし)", basicByKva:418.00, tiers:[35.69,41.98,45.70], tierBnd:[120,280], capLiftYM:"2022-12", note:"エネとくポイントプランは電灯B(10-60A)専用、C相当の独立メニュー未提供。エネとくMプラン・Lプラン・シーズンプラスCは別構造(定額制)。3段階モデルでは規制C同等で代用" }
+      B: { confirmed:true, plan:"エネとくポイントプラン", basicByAmp:{10:462.10,15:748.15,20:1034.20,30:1606.30,40:2178.40,50:2750.50,60:3322.60}, minMonthly:505.72, tiers:[35.77,42.06,45.78], tierBnd:[120,280], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・基本料金は従量電灯B−110円/月（公式明記・7値で維持）。最低月額は単価表に明記がなく規制Bと同額（従前と同じ関係）を置いた＝要確認" },
+      C: { confirmed:false, plan:"(C相当独立メニューなし)", basicByKva:572.10, tiers:[35.77,42.06,45.78], tierBnd:[120,280], capLiftYM:"2022-12", note:"エネとくポイントプランは電灯B(10-60A)専用、C相当の独立メニュー未提供。エネとくMプラン・Lプラン・シーズンプラスCは別構造(定額制)。3段階モデルでは規制C同等で代用" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1040.49, seasonal:{summer:31.02,other:31.02}, pf:true, note:"2025-10改定・主開閉器契約。北海道の低圧電力は季節別単価なし＝通年単一31.02円（確認済）" },
-    lowpower_free: { confirmed:true, basicPerKw:1040.49, seasonal:{summer:31.02,other:31.02}, pf:true, capLiftYM:"2022-12", note:"動力自由=規制低圧電力(主開閉器契約)と同単価＝燃調上限のみ差。実量契約は基本1716.99円/kW(2025-10)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1255.65, seasonal:{summer:31.10,other:31.10}, pf:true, note:"★2026-11-01改定（託送反映）・主開閉器契約・通年単一。★別件（2026-10-01 判明）：この値は規制「低圧電力」ではなく自由メニュー「エネとく動力プラン（主開閉器契約）」の値（旧 1040.49/31.02 も同じ）。公式の規制低圧電力は 1,413.06→1,681.02円/kW・28.95→29.03円/kWh。規制に直すかは要判断" },
+    lowpower_free: { confirmed:true, basicPerKw:1255.65, seasonal:{summer:31.10,other:31.10}, pf:true, capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・エネとく動力プラン（主開閉器契約）。実量契約は基本2068.55円/kW（旧1716.99）" },
   },
   tohoku: {
     method: "ampere",
     lighting_reg: {
-      B: { confirmed:true, basicByAmp:{10:369.60,15:554.40,20:739.20,30:1108.80,40:1478.40,50:1848.00,60:2217.60}, minMonthly:358.95, tiers:[29.62,36.37,40.32], tierBnd:[120,300] },
-      C: { confirmed:true, basicByKva:369.60, tiers:[29.62,36.37,40.32], tierBnd:[120,300], note:"2024-04改定後・電力量料金はB完全同単価（公式確定）" }
+      B: { confirmed:true, basicByAmp:{10:410.71,15:616.07,20:821.42,30:1232.13,40:1642.84,50:2053.55,60:2464.26}, minMonthly:389.24, tiers:[31.01,37.76,41.71], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・1248862_2-low_price.pdf" },
+      C: { confirmed:true, basicByKva:410.71, tiers:[31.01,37.76,41.71], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・電力量料金はB完全同単価（b_1249044_1.pdf「従量電灯Bと同一単価改定」）" }
     },
     lighting_free: {
-      B: { confirmed:true, plan:"よりそう+eねっとバリュー", basicByAmp:{10:314.60,15:499.40,20:684.20,30:1053.80,40:1423.40,50:1793.00,60:2162.60}, minMonthly:303.95, tiers:[29.62,36.37,40.32], tierBnd:[120,300], capLiftYM:"2022-12", note:"基本料金は従量電灯Bより約55円安・従量同額（公式確定）" },
-      C: { confirmed:true, plan:"よりそう+eねっとバリュー(C相当)", basicByKva:369.60, tiers:[29.62,36.37,40.32], tierBnd:[120,300], capLiftYM:"2022-12", note:"よりそう+eねっとバリュー Cの公式単価（東北電力PDF 2404_03確認）・B同等" }
+      B: { confirmed:true, plan:"よりそう+eねっとバリュー", basicByAmp:{10:355.71,15:561.07,20:766.42,30:1177.13,40:1587.84,50:1998.55,60:2409.26}, minMonthly:334.24, tiers:[31.01,37.76,41.71], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・基本料金は従量電灯Bより55円安・従量同額（構造維持）" },
+      C: { confirmed:true, plan:"よりそう+eねっとバリュー(C相当)", basicByKva:410.71, tiers:[31.01,37.76,41.71], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・C相当の行は単価一覧表で個別に確認できず、規制C（1kVA 410.71）と同額＝従前の関係（B同等）を維持。要確認" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1300.89, seasonal:{summer:27.09,other:25.64}, pf:true, note:"基本1300.89円/kW・夏27.09・他25.64（2025最新確定）" },
-    lowpower_free: { confirmed:true, basicPerKw:1300.89, seasonal:{summer:27.09,other:25.64}, pf:true, capLiftYM:"2022-12", note:"動力自由=規制低圧電力と同単価＝燃調上限のみ差(9社共通構造)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1400.90, seasonal:{summer:28.44,other:26.99}, pf:true, note:"★2026-11-01改定（託送反映）・基本1400.90円/kW・夏28.44・他26.99（1248862_2-low_price.pdf）" },
+    lowpower_free: { confirmed:true, basicPerKw:1400.90, seasonal:{summer:28.44,other:26.99}, pf:true, capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・動力自由=規制低圧電力と同単価＝燃調上限のみ差(9社共通構造)" },
   },
   hokuriku: {
     method: "ampere",
@@ -774,28 +775,28 @@ const RATE_PLANS = {
   chugoku: {
     method: "min_charge",
     lighting_reg: {
-      A: { confirmed:true, minChargeKwh:15, minCharge:759.68, tiers:[32.75,39.43,41.55], tierBnd:[120,300] },
-      B: { confirmed:true, basicByKva:447.97, tiers:[30.06,36.15,38.02], tierBnd:[120,300], note:"2025-04改定後・中国電力公式" }
+      A: { confirmed:true, minChargeKwh:15, minCharge:983.37, tiers:[33.32,40.00,42.12], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・p20260928-1b.pdf" },
+      B: { confirmed:true, basicByKva:476.18, tiers:[30.63,36.72,38.59], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・中国電力公式" }
     },
     lighting_free: {
-      A: { confirmed:true, plan:"ぐっとずっと。プラン スマートコース", minChargeKwh:15, minCharge:669.92, tiers:[32.01,39.43,41.55], tierBnd:[120,300], capLiftYM:"2022-12", note:"最低料金・第1段階が規制より割安、121kWh以上は規制同額（公式確定）" },
-      B: { confirmed:true, plan:"〔ビジネス〕スマートＢコース", basicByKva:447.97, tiers:[29.04,36.15,38.02], tierBnd:[120,300], capLiftYM:"2022-12", note:"基本料金は規制B同額、第1段階のみ規制Bより1.02円安・上限なし（公式確定）" }
+      A: { confirmed:true, plan:"ぐっとずっと。プラン スマートコース", minChargeKwh:15, minCharge:893.61, tiers:[32.58,40.00,42.12], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・最低料金・第1段階が規制より割安、121kWh以上は規制同額（構造維持）" },
+      B: { confirmed:true, plan:"〔ビジネス〕スマートＢコース", basicByKva:476.18, tiers:[29.61,36.72,38.59], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・biz-smartb-20261101.pdf・基本料金は規制B同額、第1段階のみ規制Bより1.02円安・上限なし（構造維持）" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1163.92, seasonal:{summer:26.80,other:25.51}, pf:true, note:"基本1163.92円/kW・夏26.80・他25.51（2025最新確定）" },
-    lowpower_free: { confirmed:true, basicPerKw:1163.92, seasonal:{summer:26.80,other:25.51}, pf:true, capLiftYM:"2022-12", note:"動力自由=規制低圧電力と同単価＝燃調上限のみ差(9社共通構造)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1228.07, seasonal:{summer:27.20,other:25.91}, pf:true, note:"★2026-11-01改定（託送反映）・基本1228.07円/kW・夏27.20・他25.91（p20260928-1b.pdf）" },
+    lowpower_free: { confirmed:true, basicPerKw:1228.07, seasonal:{summer:27.20,other:25.91}, pf:true, capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・動力自由=規制低圧電力と同単価として運用（★別件：〔ビジネス〕動力コースの基本料金は 1,216.59円/kW（旧 1,152.44）で規制と異なる・電力量は同一。要判断）" },
   },
   shikoku: {
     method: "min_charge",
     lighting_reg: {
-      A: { confirmed:true, minChargeKwh:11, minCharge:666.89, tiers:[30.65,37.27,40.78], tierBnd:[120,300], note:"2025-04公式確定値（yonden.co.jp/customer/price/plan/juryo_a.html）。3段目40.78円は自由Aより2.20円高い" },
-      B: { confirmed:true, basicByKva:397.10, tiers:[27.25,32.78,35.70], tierBnd:[120,300], note:"2024-04改定後・四国電力公式PDF" }
+      A: { confirmed:true, minChargeKwh:11, minCharge:953.13, tiers:[31.42,38.04,41.55], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・20260929_kisei.pdf／juryo_a.html。3段目41.55円は自由Aより2.20円高い（構造維持）" },
+      B: { confirmed:true, basicByKva:444.88, tiers:[28.02,33.55,36.47], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・四国電力公式PDF" }
     },
     lighting_free: {
-      A: { confirmed:true, plan:"おトクeプラン", minChargeKwh:11, minCharge:666.89, tiers:[30.65,37.27,38.58], tierBnd:[120,300], capLiftYM:"2022-12", note:"2025-04公式確定値（yonden.co.jp/customer/price/plan/otoku_e.html）。1・2段は規制Aと同単価、3段目のみ38.58円（規制より2.20円安）" },
-      B: { confirmed:true, plan:"ビジネススタンダードプラン", basicByKva:397.10, tiers:[27.25,32.78,35.70], tierBnd:[120,300], capLiftYM:"2022-12", note:"基本料金・電力量料金とも規制B完全同単価・上限なし（公式確定）" }
+      A: { confirmed:true, plan:"おトクeプラン", minChargeKwh:11, minCharge:953.13, tiers:[31.42,38.04,39.35], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・20260929_jiyuu.pdf／otoku_e.html。1・2段は規制Aと同単価、3段目のみ39.35円（規制より2.20円安）" },
+      B: { confirmed:true, plan:"ビジネススタンダードプラン", basicByKva:444.88, tiers:[28.02,33.55,36.47], tierBnd:[120,300], capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・基本料金・電力量料金とも規制B完全同単価・上限なし（business_std.html）" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1183.71, seasonal:{summer:25.97,other:24.53}, pf:true },
-    lowpower_free: { confirmed:true, basicPerKw:1183.71, seasonal:{summer:25.97,other:24.53}, pf:true, capLiftYM:"2022-12", note:"動力自由=規制低圧電力と同単価＝燃調上限のみ差(9社共通構造)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1282.52, seasonal:{summer:26.51,other:25.07}, pf:true, note:"★2026-11-01改定（託送反映）・20260929_kisei.pdf／teiatsu.html" },
+    lowpower_free: { confirmed:true, basicPerKw:1282.52, seasonal:{summer:26.51,other:25.07}, pf:true, capLiftYM:"2022-12", note:"★2026-11-01改定（託送反映）・低圧スタンダードプラン＝規制低圧電力と同単価（teiatsu_std.html）＝燃調上限のみ差" },
   },
   kyushu: {
     method: "ampere",
@@ -1484,6 +1485,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
       lighting: { basicCharge:{ jissyoContract:295.90, mainSwitchContract:236.50 }, energyCharge:8.24 },
       power:    { basicCharge:{ jissyoContract:664.40, mainSwitchContract:398.20 }, energyCharge:4.46 },
     },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoContract:477.40, mainSwitchContract:381.70 }, energyCharge:8.24 },
+      power:    { basicCharge:{ jissyoContract:1006.50, mainSwitchContract:603.90 }, energyCharge:4.46 },
+    },
   },
   tohoku: {
     '2022-04': { /* 2022年度 */
@@ -1497,6 +1502,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
     '2024-04': { /* 2024年度（〜2024-09） */
       lighting: { basicCharge:{ jissyoContract:226.60, mainSwitchContract:166.10 }, energyCharge:8.58 },
       power:    { basicCharge:{ jissyoContract:630.30, mainSwitchContract:457.60 }, energyCharge:8.57 },
+    },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoContract:279.40, mainSwitchContract:204.60 }, energyCharge:9.92 },
+      power:    { basicCharge:{ jissyoContract:756.80, mainSwitchContract:550.00 }, energyCharge:9.87 },
     },
   },
   tokyo: {
@@ -1512,6 +1521,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
       lighting: { basicCharge:{ jissyoContract:230.67, mainSwitchContract:152.24 }, energyCharge:6.97 },
       power:    { basicCharge:{ jissyoContract:731.97, mainSwitchContract:461.14 }, energyCharge:4.54 },
     },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoContract:351.08, mainSwitchContract:231.72 }, energyCharge:6.97 },
+      power:    { basicCharge:{ jissyoContract:877.92, mainSwitchContract:553.09 }, energyCharge:4.54 },
+    },
   },
   chubu: {
     '2022-04': { /* 2022年度 */
@@ -1525,6 +1538,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
     '2024-04': { /* 2024年度（〜2024-09） */
       lighting: { basicCharge:{ jissyoContract:214.50, mainSwitchContract:137.50 }, energyCharge:7.91 },
       power:    { basicCharge:{ jissyoContract:550.00, mainSwitchContract:412.50 }, energyCharge:6.07 },
+    },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoContract:406.51, mainSwitchContract:263.43 }, energyCharge:7.91 },
+      power:    { basicCharge:{ jissyoContract:743.39, mainSwitchContract:560.01 }, energyCharge:6.07 },
     },
   },
   hokuriku: {
@@ -1572,6 +1589,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
       lighting: { basicCharge:{ jissyoFirst6kW:326.70, jissyoPer1kW:108.90, mainFirst6kVA:268.40, mainPer1kVA:89.10 }, energyCharge:9.09 },
       power:    { basicCharge:{ jissyoContract:568.70, mainSwitchContract:466.40 }, energyCharge:6.07 },
     },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoFirst6kW:539.02, jissyoPer1kW:179.67, mainFirst6kVA:442.00, mainPer1kVA:147.33 }, energyCharge:9.63 },
+      power:    { basicCharge:{ jissyoContract:665.10, mainSwitchContract:545.38 }, energyCharge:6.44 },
+    },
   },
   shikoku: {
     '2022-04': { /* 2022年度 */
@@ -1585,6 +1606,10 @@ const WHEELING_TARIFF_FY2022_2026 = {
     '2024-04': { /* 2024年度（〜2024-09） */
       lighting: { basicCharge:{ jissyoFirst6kW:363.00, jissyoPer1kW:121.00, mainFirst6kVA:297.00, mainPer1kVA:99.00 }, energyCharge:8.82 },
       power:    { basicCharge:{ jissyoContract:554.40, mainSwitchContract:454.30 }, energyCharge:5.97 },
+    },
+    '2026-11': { /* 2026-11-01改定（現行） */
+      lighting: { basicCharge:{ jissyoFirst6kW:643.50, jissyoPer1kW:214.50, mainFirst6kVA:528.00, mainPer1kVA:176.00 }, energyCharge:9.54 },
+      power:    { basicCharge:{ jissyoContract:700.70, mainSwitchContract:574.20 }, energyCharge:6.46 },
     },
   },
   kyushu: {
@@ -1855,7 +1880,29 @@ document.querySelectorAll('.jepxCovTxt').forEach(e=>{ e.textContent=jepxCoverage
 // 契約区分判定：最低料金制エリアは契約容量なし(amp=0)→A、それ以外→B
 // アンペア制エリアは10〜60A→B、それ以上のkVA指定→C（暫定でBと同単価運用）
 // 戻り値: 'A' | 'B' | 'C'
-function lightingClass(area, amp){
+/* === LOWVOLT_CALC_FROM_MASTER ==================================================================
+   ★生成ブロック（tools/patch_cs_index_calc.py が src/master.js から毎ビルド注入。手で編集しない）
+   旧一電・低圧の計算関数（従量電灯 A/B/C・低圧電力・力率割引）は master.js の実装そのもの。
+   呼び出し規約の差（amp→cap 換算・力率の適用ゲート）は末尾の薄いラッパで吸収する。
+   旧 PF_LOWPOWER_RULE_FROM_MASTER（v80・力率区分だけの注入）はこのブロックに吸収した。
+   ===================================================================================================== */
+const TERA_CALC = (function(){
+  const PF_LOWPOWER_NONE  = { hokkaido:true, tokyo:true, hokuriku:true, chugoku:true };          // 低圧電力 力率割引なし
+  const PF_LOWPOWER_STEP5 = { chubu:true, tohoku:true, kansai:true, shikoku:true, kyushu:true }; // 低圧電力 段階固定5%
+  const AMP_STEPS_DEFAULT = [10,15,20,30,40,50,60];
+  function pfApplies(cat, area){
+    if(cat==="lighting") return false;
+    if(cat==="lowpower") return !PF_LOWPOWER_NONE[area];
+    return true; // kouatsu / toksubetsu
+  }
+  function pfFactorFor(cat, area, pf){
+    const p = Number(pf);
+    if(cat==="lowpower" && PF_LOWPOWER_STEP5[area]){
+      return p>85 ? 0.95 : (p<85 ? 1.05 : 1.0);
+    }
+    return 1 + (85 - p)/100;
+  }
+  function lightingClass(area, amp){
   const M = RATE_PLANS[area].method;
   if(M === 'min_charge'){
     return (!amp || amp===0) ? 'A' : 'B';
@@ -1864,76 +1911,81 @@ function lightingClass(area, amp){
     if([10,15,20,30,40,50,60].includes(amp)) return 'B';
     return 'C';
   }
-}
-
-// 大手・従量電灯 本体（最低料金制 or アンペア制／A/B/C区分対応）
-function lightingBody(area,sysk,kwh,amp){
-  const M = RATE_PLANS[area].method;
-  const cls = lightingClass(area, amp);
+  }
+  function lightingBody(area,sysk,kwh,cap,cls){
+  const MD = RATE_PLANS[area].method;
   const plansByClass = RATE_PLANS[area]['lighting_'+sysk];
-  // 該当区分の単価が未確定なら、代替区分にfallback（B→A or B→B）
+  if(!cls) cls = lightingClass(area, cap); // 区分未指定時は容量から推定（後方互換）
   let P = plansByClass[cls];
+  let fellBack = false;   // 未確定区分の代替プランを使ったか（cap の単位が区分と食い違う可能性がある）
   if(!P || !P.confirmed){
-    // fallback順：C→B, B→A or B（最低料金制でBが未取得ならA、アンペア制でCが未取得ならB）
-    if(M==='min_charge'){
-      P = plansByClass.A || P;
-    } else {
-      P = plansByClass.B || P;
-    }
+    // 未確定区分は代替へfallback（最低料金制→A、アンペア制→B）
+    P = (MD==='min_charge') ? (plansByClass.A||plansByClass.B||P) : (plansByClass.B||plansByClass.C||P);
+    fellBack = true;
   }
-  const [b1,b2]=P.tierBnd;const t=P.tiers;
-  if(M==='min_charge' && cls==='A'){
-    // 従量電灯A：最低料金制（〜15kWh定額＋それ以上3段階）
-    if(kwh<=P.minChargeKwh)return {body:P.minCharge,P,cls};
-    let e=(Math.min(kwh,b1)-P.minChargeKwh)*t[0];
-    if(kwh>b1)e+=(Math.min(kwh,b2)-b1)*t[1];
-    if(kwh>b2)e+=(kwh-b2)*t[2];
-    return {body:P.minCharge+e,P,cls};
-  } else if(M==='min_charge' && cls==='B'){
-    // 従量電灯B（最低料金制エリア）：kVA基本料金＋3段階（0kWhから計上）
-    const kva = amp/10; // 1kVA=10A換算（amp=60なら6kVA）
-    const base = P.basicByKva * Math.max(kva, 6); // 最低6kVA
-    let e=Math.min(kwh,b1)*t[0];
-    if(kwh>b1)e+=(Math.min(kwh,b2)-b1)*t[1];
-    if(kwh>b2)e+=(kwh-b2)*t[2];
-    return {body:base+e,P,cls};
-  } else {
-    // アンペア制エリア：B（10〜60A別基本料金）または C（kVA基本料金）
-    let base;
-    if(cls==='B' || !P.basicByKva){
-      base = P.basicByAmp[amp] ?? P.basicByAmp[20];
-    } else {
-      // C: kVA基本料金
-      const kva = amp/10;
-      base = P.basicByKva * Math.max(kva, 6);
-    }
-    let e=Math.min(kwh,b1)*t[0];
-    if(kwh>b1)e+=(Math.min(kwh,b2)-b1)*t[1];
-    if(kwh>b2)e+=(kwh-b2)*t[2];
-    return {body:Math.max(base+e,P.minMonthly||0),P,cls};
+  const [b1,b2]=P.tierBnd; const t=P.tiers;
+  // 三段階従量（最低料金制Aは minChargeKwh まで無料枠）
+  const startFree = P.minCharge!=null ? (P.minChargeKwh||0) : 0;
+  let e=(Math.min(kwh,b1)-Math.min(kwh,startFree))*t[0];
+  if(kwh>b1)e+=(Math.min(kwh,b2)-b1)*t[1];
+  if(kwh>b2)e+=(kwh-b2)*t[2];
+  // 基本料金（区分の単位で cap を解釈）
+  let base;
+  if(P.minCharge!=null){            // 従量電灯A：最低料金制
+    if(kwh<=startFree) return {body:P.minCharge, base:P.minCharge, energy:0, P, cls};
+    base = P.minCharge;
+  } else if(P.basicByAmp){          // B（アンペア制）：cap=アンペア
+    /* ★2026-09-07（v59レビュー）：契約に存在しないアンペア（11A・25A など）は
+         旧「?? 30A」で黙って30Aになり、TERA側（A÷10 kVA）と契約容量が食い違っていた。
+         normAmp で「入力以上の最小の契約ステップ」に丸め、TERA側も同じ値を使う。 */
+    base = fellBack
+      ? (P.basicByAmp[cap] ?? P.basicByAmp[30])                 // 代替プラン（C→B 等）：cap は kVA なので従来どおり既定30A
+      : P.basicByAmp[normAmp(cap, P.basicByAmp).amp];
+  } else {                          // C / B（kVA制）：cap=kVA
+    base = P.basicByKva * Math.max(cap, 6); // 最低6kVA
   }
-}
-/* === PF_LOWPOWER_RULE_FROM_MASTER ==========================================
-   ★生成ブロック（tools/patch_cs_index_pf.py が src/master.js から毎ビルド生成。手で編集しない）
-   旧一電・低圧電力の力率割引：段階5%（85%超→0.95／85%未満→1.05）または なし（1.0）。
-   TERA市場連動の低圧は元から力率割引なし（teraMonthly 側・係数1.0）。この関数は大手比較側専用。
-   ========================================================================================== */
-const PF_LOWPOWER_NONE  = { hokkaido:true, tokyo:true, hokuriku:true, chugoku:true };
-const PF_LOWPOWER_STEP5 = { tohoku:true, chubu:true, kansai:true, shikoku:true, kyushu:true };
-function lpPfFactor(area, pf){
-  if(PF_LOWPOWER_NONE[area]) return 1.0;
-  const p = Number(pf); if(!isFinite(p)) return 1.0;
-  if(PF_LOWPOWER_STEP5[area]) return p > 85 ? 0.95 : (p < 85 ? 1.05 : 1.0);
-  return 1 + (85 - p) / 100;   // 未分類エリアの保険（master.js に無いエリア）
-}
-// 大手・低圧電力 本体（基本料金×kW×力率 ＋ 季節別従量）
-function lowpowerBody(area,sysk,kwh,kw,pf,month){
+  const body = Math.max(base + e, P.minMonthly || 0);
+  const baseAdj = (body > base + e) ? body - e : base; // minMonthly適用時は基本側を底上げ
+  return {body, base:baseAdj, energy:e, P, cls};
+  }
+  function normAmp(cap, byAmp){
+    const steps = (byAmp ? Object.keys(byAmp).map(Number).filter(n=>n>0) : AMP_STEPS_DEFAULT).sort((a,b)=>a-b);
+    const v = Number(cap)||0;
+    if(v<=0) return { amp: steps.includes(30)?30:steps[0], snapped:false, input:v, empty:true };
+    if(steps.includes(v)) return { amp:v, snapped:false, input:v };
+    const up = steps.find(st=>st>=v);
+    return { amp: up ?? steps[steps.length-1], snapped:true, input:v };
+  }
+  function ampStepsFor(area){
+    const P = (RATE_PLANS[area]||{}).lighting_reg?.B || (RATE_PLANS[area]||{}).lighting_free?.B;
+    return P && P.basicByAmp ? Object.keys(P.basicByAmp).map(Number).sort((a,b)=>a-b) : AMP_STEPS_DEFAULT.slice();
+  }
+  function lowpowerBody(area,sysk,kwh,kw,pf,month){
   const P=RATE_PLANS[area]['lowpower_'+sysk];
   const summer=[7,8,9].includes(month);
   const unit=summer?P.seasonal.summer:P.seasonal.other;
-  let pfFactor=P.pf ? lpPfFactor(area,pf) : 1; // ★生成差し替え：段階5%／なし（区分は master.js）
+  let pfFactor=1; if(P.pf){ pfFactor = pfFactorFor("lowpower", area, pf); } // 力率割引：方式はエリア依存（中部=段階5%/他=連続式）
   const base=P.basicPerKw*kw*pfFactor;
-  return {body:base+unit*kwh,P,pfFactor};
+  const energy=unit*kwh;
+  return {body:base+energy, base, energy, P, pfFactor};
+  }
+  return { PF_LOWPOWER_NONE, PF_LOWPOWER_STEP5, AMP_STEPS_DEFAULT, pfApplies, pfFactorFor, lightingClass, lightingBody, normAmp, ampStepsFor, lowpowerBody };
+})();
+const PF_LOWPOWER_NONE  = TERA_CALC.PF_LOWPOWER_NONE;
+const PF_LOWPOWER_STEP5 = TERA_CALC.PF_LOWPOWER_STEP5;
+function lightingClass(area, amp){ return TERA_CALC.lightingClass(area, amp); }
+// cs/index の契約容量入力はアンペア。master の lightingBody は cap を区分の単位（B=アンペア／C・kVA制B=kVA／A=不問）で読む。
+function lightingBody(area,sysk,kwh,amp){
+  const cls = TERA_CALC.lightingClass(area, amp);
+  const ampere = RATE_PLANS[area].method !== 'min_charge' && cls === 'B';
+  const cap = cls === 'A' ? 0 : (ampere ? amp : (Number(amp)||0) / 10);
+  return TERA_CALC.lightingBody(area, sysk, kwh, cap, cls);
+}
+// 旧一電・低圧電力の力率係数：適用ゲート（なしエリア→1.0）込み。TERA側（teraMonthly）は元から係数1.0。
+function lpPfFactor(area, pf){ return TERA_CALC.pfApplies('lowpower', area) ? TERA_CALC.pfFactorFor('lowpower', area, pf) : 1.0; }
+function lowpowerBody(area,sysk,kwh,kw,pf,month){
+  const lpf = TERA_CALC.pfApplies('lowpower', area) ? pf : 85;   // engine.js と同じ：適用外は 85（係数1.0）
+  return TERA_CALC.lowpowerBody(area, sysk, kwh, kw, lpf, month);
 }
 // 大手 月額（本体＋燃調＋賦課金）。capLift考慮：自由はcapLiftYM以降 上限なし(=素のfree値)
 function utilityMonthly(area,sysk,cat,kwh,ym,opt){
