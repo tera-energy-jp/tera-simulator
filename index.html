@@ -573,15 +573,15 @@ const RATE_PLANS = {
   kansai: {
     method: "min_charge",
     lighting_reg: {
-      A: { confirmed:true, minChargeKwh:15, minCharge:522.58, tiers:[20.21,25.61,28.59], tierBnd:[120,300] },
-      B: { confirmed:true, basicByKva:447.21, tiers:[17.81,21.02,23.52], tierBnd:[120,300], note:"2024-04改定後・関電公式PDF" }
+      A: { confirmed:true, minChargeKwh:15, minCharge:763.81, tiers:[20.89,26.29,29.27], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・kepco.jp/d-ryokin2026/・9/29プレス20260929_3j.pdf（現行 522.58／20.21,25.61,28.59）" },
+      B: { confirmed:true, basicByKva:497.82, tiers:[18.49,21.70,24.20], tierBnd:[120,300], note:"★2026-11-01改定（託送反映）・同上（現行 447.21／17.81,21.02,23.52）" }
     },
     lighting_free: {
-      A: { confirmed:true, plan:"なっトクでんき", minChargeKwh:15, minCharge:377.40, tiers:[20.31,24.10,27.80], tierBnd:[120,300], capLiftYM:"2023-05" },
-      B: { confirmed:true, plan:"なっトクでんきBiz", basicByKva:391.99, tiers:[16.79,19.87,22.68], tierBnd:[120,300], capLiftYM:"2023-05", note:"関電法人公式・なっトクパック" }
+      A: { confirmed:true, plan:"なっトクでんき", minChargeKwh:15, minCharge:618.63, tiers:[20.99,24.78,28.48], tierBnd:[120,300], capLiftYM:"2023-05", note:"★2026-11-01改定（託送反映）・kepco.jp/d-ryokin2026/（現行 377.40／20.31,24.10,27.80）" },
+      B: { confirmed:true, plan:"なっトクでんきBiz", basicByKva:442.60, tiers:[17.47,20.55,23.36], tierBnd:[120,300], capLiftYM:"2023-05", note:"★2026-11-01改定（託送反映）・関電法人公式・なっトクパック（現行 391.99／16.79,19.87,22.68）" }
     },
-    lowpower_reg:  { confirmed:true, basicPerKw:1132.71, seasonal:{summer:14.35,other:12.86}, pf:true },
-    lowpower_free: { confirmed:true, basicPerKw:1132.71, seasonal:{summer:14.35,other:12.86}, pf:true, capLiftYM:"2023-05", note:"関電本体に独自の動力自由メニュー無し。規制低圧電力と同単価＝燃調上限のみ差(構造確定)" },
+    lowpower_reg:  { confirmed:true, basicPerKw:1211.46, seasonal:{summer:14.83,other:13.34}, pf:true, note:"★2026-11-01改定（託送反映）・kepco.jp/d-ryokin2026/（現行 1132.71／14.35,12.86）" },
+    lowpower_free: { confirmed:true, basicPerKw:1211.46, seasonal:{summer:14.83,other:13.34}, pf:true, capLiftYM:"2023-05", note:"★2026-11-01改定（託送反映）・関電本体に独自の動力自由メニュー無し。規制低圧電力と同単価＝燃調上限のみ差(構造確定)" },
   },
   tokyo: {
     method: "ampere",
